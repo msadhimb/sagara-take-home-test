@@ -17,17 +17,6 @@ import PhotoGalleryModal from "./components/PhotoGalleryModal"
 import { Separator } from "@/components/ui/separator"
 
 const ProductView = () => {
-  const params = useParams<{ slug: string }>()
-  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug
-
-  const product = products.find((p) => p.slug === slug)
-  const similar = products.filter((p) => p.slug !== slug).slice(0, 4)
-
-  const [date, setDate] = useState<Date | DateRange | undefined>(undefined)
-  const [galleryOpen, setGalleryOpen] = useState(false)
-  const [galleryStart, setGalleryStart] = useState<number | null>(null)
-  const [gallerySession, setGallerySession] = useState(0)
-
   const images = [
     "/assets/spaces/image-1.png",
     "/assets/spaces/image-2.png",
@@ -36,9 +25,16 @@ const ProductView = () => {
     "/assets/spaces/image-5.png",
     "/assets/spaces/image-6.png",
   ]
+  const params = useParams()
+  const slug = params?.slug
 
-  if (!product) notFound()
+  const [date, setDate] = useState<Date | DateRange | undefined>(undefined)
+  const [galleryOpen, setGalleryOpen] = useState(false)
+  const [galleryStart, setGalleryStart] = useState<number | null>(null)
+  const [gallerySession, setGallerySession] = useState(0)
 
+  const product: any = products.find((p) => p.slug === slug)
+  const similar = products.filter((p) => p.slug !== slug).slice(0, 4)
   const prices = product.prices
 
   const handleOpenGallery = (index: number | null) => {
