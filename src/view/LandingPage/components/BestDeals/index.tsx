@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { Tag } from "lucide-react"
 import SectionHeader from "@/components/SectionHeader"
 import { Button } from "@/components/ui/button"
@@ -48,7 +47,7 @@ const BestDeals = () => {
         }
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {deals.map((deal, index) => (
           <PromotionsCard
             key={index}

@@ -13,10 +13,10 @@ import DownloadApp from "./components/DownloadApp"
 
 const LandingPage = () => {
   return (
-    <div className="space-y-44 overflow-x-hidden">
-      <div className="container mx-auto">
+    <div className="space-y-16 overflow-x-hidden sm:space-y-24 lg:space-y-44">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <Hero />
-        <div className="space-y-44">
+        <div className="space-y-16 sm:space-y-24 lg:space-y-44">
           <Spaces />
           <Recommended />
           <WhyCeoSuite />
@@ -29,7 +29,7 @@ const LandingPage = () => {
 
       <TrustedBy />
 
-      <div className="container mx-auto space-y-44">
+      <div className="container mx-auto space-y-16 px-4 sm:space-y-24 sm:px-6 lg:space-y-44 lg:px-8">
         <NewsInsights />
         <Faq />
       </div>

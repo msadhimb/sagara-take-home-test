@@ -20,12 +20,6 @@ import Logo from "../Icons/logo"
 import Link from "next/link"
 
 const Navbar = ({
-  logo = {
-    url: "https://www.shadcnblocks.com",
-    src: "https://www.sagara.id/assets/logo.png",
-    alt: "logo",
-    title: "Sagara.id",
-  },
   menu = [
     { title: "Workspace", url: "#" },
     {
@@ -105,22 +99,24 @@ const Navbar = ({
   className,
 }: Navbar1Props) => {
   return (
-    <section className={cn("py-5", className)}>
-      <div className="container mx-auto">
+    <section className={cn("py-3 md:py-5", className)}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">
             {/* Logo */}
-            <Logo />
+            <Link href={"/"} className="flex items-center gap-2">
+              <Logo />
+            </Link>
           </div>
-          <div className="flex items-center">
+          <div className="flex min-w-0 items-center">
             <NavigationMenu>
               <NavigationMenuList>
                 {menu.map((item) => renderMenuItem(item))}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-          <div className="flex items-center gap-5 font-medium">
+          <div className="flex shrink-0 items-center gap-5 font-medium">
             <Link href={auth.login.url} className="rounded-sm text-primary">
               {auth.login.title}
             </Link>
@@ -134,13 +130,9 @@ const Navbar = ({
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              <img
-                src={logo.src}
-                className="max-h-8 dark:invert"
-                alt={logo.alt}
-              />
-            </a>
+            <Link href={"/"} className="flex items-center gap-2">
+              <Logo size={25} />
+            </Link>
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -150,13 +142,9 @@ const Navbar = ({
               <SheetContent className="overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>
-                    <a href={logo.url} className="flex items-center gap-2">
-                      <img
-                        src={logo.src}
-                        className="max-h-8 dark:invert"
-                        alt={logo.alt}
-                      />
-                    </a>
+                    <Link href={"/"} className="flex items-center gap-2">
+                      <Logo size={25} />
+                    </Link>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">

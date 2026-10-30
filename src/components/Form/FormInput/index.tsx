@@ -61,7 +61,7 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
           {...inputProps}
           ref={ref}
           className={cn(
-            "text-md rounded-sm bg-white px-3 py-5 focus-visible:ring-primary",
+            "rounded-sm bg-white px-3 py-5 text-base focus-visible:ring-primary",
             className
           )}
           style={

@@ -56,15 +56,7 @@ const defaultProps: FooterProps = {
 const MAX_SECTIONS = 4
 
 const Footer = (props: Props) => {
-  const {
-    logo,
-    description,
-    sections,
-    copyright,
-    legalLinks,
-    className,
-    logoClassName,
-  } = {
+  const { description, sections, copyright, legalLinks, className } = {
     ...defaultProps,
     ...props,
   }
@@ -72,10 +64,10 @@ const Footer = (props: Props) => {
   const visibleSections = (sections ?? []).slice(0, MAX_SECTIONS)
 
   return (
-    <section className={cn("pt-32 pb-10", className)}>
-      <div className="container mx-auto">
+    <section className={cn("pt-16 pb-10 md:pt-24 lg:pt-32", className)}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <footer>
-          <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-6">
             <FooterBrand description={description} />
             {visibleSections.map((section, sectionIdx) => (
               <FooterSectionColumn key={sectionIdx} section={section} />

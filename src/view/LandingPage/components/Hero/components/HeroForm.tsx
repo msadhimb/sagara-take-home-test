@@ -3,12 +3,22 @@
 import { useForm, Controller } from "react-hook-form"
 import type { DateRange } from "react-day-picker"
 import { Button } from "@/components/ui/button"
-import FormInput from "@/components/Form/FormInput"
 import FormDate from "@/components/Form/FormDate"
 import FormDropdown from "@/components/Form/FormDropdown"
 import { Building2, Calendar, MapPin } from "lucide-react"
 
-const workspaceOptions: any[] = [
+type WorkspaceOption = {
+  value: string
+  label: string
+}
+
+type HeroFormValues = {
+  city: string
+  date?: DateRange
+  workspace?: string[]
+}
+
+const workspaceOptions: WorkspaceOption[] = [
   { value: "private-office", label: "Private Office" },
   { value: "meeting-room", label: "Meeting Room" },
   { value: "virtual-office", label: "Virtual Office" },
@@ -16,7 +26,7 @@ const workspaceOptions: any[] = [
 ]
 
 const HeroForm = () => {
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit } = useForm<HeroFormValues>({
     mode: "onChange",
     defaultValues: {
       city: "",
@@ -25,12 +35,12 @@ const HeroForm = () => {
     },
   })
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values: HeroFormValues) => {
     console.log(values)
   }
 
   return (
-    <div className="relative flex w-full max-w-140 flex-col gap-5 overflow-hidden rounded-3xl border border-primary/20 bg-white/70 p-8 shadow-2xl shadow-primary/15 backdrop-blur-xl">
+    <div className="relative flex w-full max-w-full flex-col gap-4 overflow-hidden rounded-3xl border border-primary/20 bg-white/70 p-5 shadow-2xl shadow-primary/15 backdrop-blur-xl sm:max-w-140 sm:gap-5 sm:p-6 md:p-8">
       <div className="absolute inset-x-0 top-0 h-1.5 bg-primary" aria-hidden />
       <div
         className="pointer-events-none absolute -top-16 -right-16 size-48 rounded-full bg-primary/15 blur-3xl"
@@ -38,7 +48,7 @@ const HeroForm = () => {
       />
 
       <div className="relative flex flex-col gap-1.5">
-        <h1 className="text-3xl font-bold tracking-tight text-primary">
+        <h1 className="text-2xl font-bold tracking-tight text-primary sm:text-3xl">
           Find Your Spaces
         </h1>
         <p className="text-sm text-neutral-600">

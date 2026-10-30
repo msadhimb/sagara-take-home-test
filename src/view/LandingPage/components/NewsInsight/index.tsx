@@ -29,16 +29,19 @@ const articles = [
 const NewsInsights = () => {
   return (
     <section className="space-y-6">
-      <h2 className="text-xl font-semibold">
+      <h2 className="text-lg font-semibold sm:text-xl">
         News, events and insights for you
       </h2>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5 lg:gap-8">
         <div className="space-y-4 lg:col-span-3">
           <div className="divide-y">
             {articles.map((article) => (
-              <div key={article.title} className="flex gap-4 py-4 first:pt-0">
-                <div className="relative h-32 w-64 shrink-0 overflow-hidden rounded">
+              <div
+                key={article.title}
+                className="flex flex-col gap-3 py-4 first:pt-0 sm:flex-row sm:gap-4"
+              >
+                <div className="relative h-40 w-full overflow-hidden rounded sm:h-32 sm:w-48 sm:shrink-0 lg:w-64">
                   <Image
                     src={article.image}
                     alt={article.title}
@@ -47,10 +50,14 @@ const NewsInsights = () => {
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <p className="text-sm text-neutral-400">{article.meta}</p>
-                  <h3 className="text-xl font-semibold">{article.title}</h3>
-                  <p className="text-md leading-snug text-neutral-500">
+                <div className="min-w-0 flex-1 space-y-1">
+                  <p className="text-xs text-neutral-400 sm:text-sm">
+                    {article.meta}
+                  </p>
+                  <h3 className="text-lg font-semibold sm:text-xl">
+                    {article.title}
+                  </h3>
+                  <p className="text-sm leading-snug text-neutral-500 sm:text-base">
                     {article.excerpt}
                   </p>
                 </div>
@@ -58,13 +65,13 @@ const NewsInsights = () => {
             ))}
           </div>
 
-          <Button className="rounded-md bg-primary px-10 py-5 hover:bg-primary/90">
+          <Button className="w-full rounded-md bg-primary px-6 py-5 hover:bg-primary/90 sm:w-auto sm:px-10">
             See All Updates
             <ChevronRight className="size-3.5" />
           </Button>
         </div>
 
-        <div className="relative min-h-80 overflow-hidden rounded-md lg:col-span-2">
+        <div className="relative min-h-64 overflow-hidden rounded-md sm:min-h-80 lg:col-span-2">
           <Image
             src="/assets/deals/image-1.jpg"
             alt="Minimal workspace for inspirations"
@@ -79,7 +86,7 @@ const NewsInsights = () => {
 
           <div className="absolute bottom-5 left-5 space-y-1 pr-5 text-white">
             <p className="text-xs">Debits – 03 June 2023</p>
-            <h3 className="text-2xl leading-tight font-semibold">
+            <h3 className="text-xl leading-tight font-semibold sm:text-2xl">
               Minimal workspace for inspirations
             </h3>
           </div>

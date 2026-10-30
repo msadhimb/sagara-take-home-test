@@ -13,6 +13,7 @@ export interface Navbar1Props {
     src: string
     alt: string
     title: string
+    size?: number
     className?: string
   }
   menu?: MenuItem[]

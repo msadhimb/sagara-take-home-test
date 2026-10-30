@@ -1,7 +1,7 @@
 "use client"
 
 import { Combobox as ComboboxPrimitive } from "@base-ui/react"
-import { ChevronDown, X } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   Combobox,
@@ -78,7 +78,8 @@ const FormDropdown = ({
         }
       />
       {isCheckbox && selectedLabels && (
-        <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center truncate pl-3 text-sm"
+        <span
+          className="pointer-events-none absolute inset-y-0 left-0 flex items-center truncate pl-3 text-sm"
           style={icon ? { paddingLeft: "calc(1rem + 15px)" } : undefined}
         >
           {selectedLabels}

@@ -27,7 +27,7 @@ const SpacesCard = ({
 }: SpaceCardProps) => {
   return (
     <div className="rounded-lg bg-white p-2 shadow-md">
-      <div className="relative h-42 w-full overflow-hidden rounded">
+      <div className="relative h-36 w-full overflow-hidden rounded sm:h-40 md:h-42">
         <Image src={image} alt={name} fill className="object-cover" />
       </div>
 
@@ -52,7 +52,7 @@ const SpacesCard = ({
               {oldPrice}
             </p>
           )}
-          <p className="text-lg font-bold text-primary">{price}</p>
+          <p className="text-base font-bold text-primary sm:text-lg">{price}</p>
           <p className="text-[10px] text-neutral-500">
             {subPeriod} <span className="font-medium">{subPrice}</span>
           </p>

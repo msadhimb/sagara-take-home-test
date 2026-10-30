@@ -1,5 +1,4 @@
 import LogoLoop from "@/components/LogoLoop"
-import Image from "next/image"
 
 const logos = [
   { src: "/assets/client/image-1.png", alt: "uber", title: "", width: 50 },
@@ -10,8 +9,8 @@ const logos = [
 
 const TrustedBy = () => {
   return (
-    <section className="space-y-8 bg-neutral-50 px-4 py-12 text-center">
-      <h2 className="text-3xl font-normal">
+    <section className="space-y-6 bg-neutral-50 px-4 py-8 text-center sm:space-y-8 sm:px-6 sm:py-12 lg:px-8">
+      <h2 className="text-2xl font-normal sm:text-3xl">
         <span className="relative inline-block font-bold">
           Trusted
           <svg

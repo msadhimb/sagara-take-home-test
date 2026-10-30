@@ -5,39 +5,38 @@ import Elipse from "@/components/Icons/elipse"
 import GooglePlayBlack from "@/components/Icons/GooglePlayBlack"
 import PhoneA from "@/components/Icons/phone/PhoneA"
 import PhoneB from "@/components/Icons/phone/PhoneB"
-import Image from "next/image"
 
 const DownloadApp = () => {
   return (
-    <section className="relative h-140 overflow-hidden bg-linear-to-b from-primary/5 to-primary/15 px-6 pt-12 md:px-12">
-      <div className="absolute bottom-0 left-0 z-0">
+    <section className="relative overflow-hidden bg-linear-to-b from-primary/5 to-primary/15 px-4 py-10 sm:px-6 sm:py-12 md:h-140 md:px-12 md:pt-12 md:pb-0">
+      <div className="absolute bottom-0 left-0 z-0 hidden md:block">
         <AbstractB />
       </div>
-      <div className="relative z-25 flex h-full flex-col justify-center space-y-4 p-25">
-        <h2 className="text-4xl font-bold text-primary">
+      <div className="relative z-10 flex max-w-lg flex-col justify-center gap-4 sm:max-w-xl sm:gap-5 md:h-full md:max-w-none md:p-25">
+        <h2 className="text-2xl font-bold text-primary sm:text-3xl md:text-4xl">
           Download the CEO SUITE App Now!
         </h2>
-        <p className="text-lg text-neutral-600">
+        <p className="text-sm text-neutral-600 sm:text-base md:text-lg">
           Simplify your meeting planning with our app. Download now to enjoy
           seamless booking and more.
         </p>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <AppStoreBlack />
           <GooglePlayBlack />
         </div>
       </div>
 
-      <div className="absolute right-0 bottom-0 z-2">
+      <div className="absolute right-0 bottom-0 z-2 hidden md:block">
         <Elipse />
       </div>
-      <div className="absolute right-0 -bottom-80 z-2 rotate-90">
+      <div className="absolute right-0 -bottom-80 z-2 hidden rotate-90 md:block">
         <AbstractA />
       </div>
-      <div className="absolute right-92 bottom-0 z-2">
+      <div className="absolute right-92 bottom-0 z-2 hidden lg:block">
         <PhoneA />
       </div>
-      <div className="absolute -top-20 right-0 z-2">
+      <div className="lg :block absolute -top-20 right-0 z-2 hidden">
         <PhoneB />
       </div>
     </section>

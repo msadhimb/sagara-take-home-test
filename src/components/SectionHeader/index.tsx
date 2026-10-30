@@ -1,5 +1,4 @@
 import type { ReactNode } from "react"
-import { Button } from "@/components/ui/button"
 
 type SectionHeaderProps = {
   icon?: ReactNode
@@ -16,8 +15,8 @@ const SectionHeader = ({
   button,
 }: SectionHeaderProps) => {
   return (
-    <div className="flex w-full items-start justify-between gap-4">
-      <div className="space-y-1">
+    <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+      <div className="min-w-0 space-y-1">
         {/* Ikon bulat + judul */}
         <div className="flex items-center gap-2">
           {icon && (
@@ -31,15 +30,7 @@ const SectionHeader = ({
       </div>
 
       {/* Tombol "See All" */}
-      {button &&
-        // <Button
-        //   variant="ghost"
-        //   size="sm"
-        //   className="bg-primary/10 text-xs text-primary hover:bg-primary/20 hover:text-primary"
-        // >
-        //   {buttonText}
-        // </Button>
-        button}
+      {button && <div className="shrink-0 self-start">{button}</div>}
     </div>
   )
 }

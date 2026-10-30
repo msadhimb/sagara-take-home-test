@@ -24,7 +24,7 @@ const PromotionsCard = ({
     return (
       <div
         className={cn(
-          "relative h-64 overflow-hidden rounded-md shadow-sm",
+          "relative h-56 overflow-hidden rounded-md shadow-sm sm:h-64",
           withBorder && "border",
           className
         )}
@@ -57,7 +57,7 @@ const PromotionsCard = ({
         className
       )}
     >
-      <div className="relative h-64 w-full">
+      <div className="relative h-48 w-full sm:h-56 md:h-64">
         <Image src={image} alt={title} fill className="object-cover" />
       </div>
 

@@ -33,14 +33,14 @@ const CorporatePartners = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="bg-primary/10 px-10 py-5 text-sm text-primary hover:bg-primary/20 hover:text-primary"
+            className="bg-primary/10 px-6 py-3 text-sm text-primary hover:bg-primary/20 hover:text-primary md:px-10 md:py-5"
           >
             See All
           </Button>
         }
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {partners.map((partner) => (
           <div key={partner.title} className="space-y-3">
             <PromotionsCard

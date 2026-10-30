@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import { id as idLocale } from "date-fns/locale"
-import { CalendarIcon, icons } from "lucide-react"
 import type { DateRange, Matcher } from "react-day-picker"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -16,7 +15,7 @@ import { FormField } from "../"
 import { formatDate } from "@/helper/formatDate"
 
 interface FormDateProps {
-  id?: any
+  id?: string
   label?: string
   required?: boolean
   description?: string
@@ -25,10 +24,10 @@ interface FormDateProps {
   disabled?: boolean
   disabledDates?: Matcher | Matcher[]
   mode: "single" | "range"
-  value?: any
+  value?: Date | DateRange
   onChange?: (value: Date | DateRange | undefined) => void
   placeholder?: string
-  icon?: any
+  icon?: ReactNode
 }
 
 const FormDate = ({
@@ -47,13 +46,24 @@ const FormDate = ({
   icon,
 }: FormDateProps) => {
   const [open, setOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)")
+    const update = () => setIsMobile(query.matches)
+    update()
+    query.addEventListener("change", update)
+    return () => query.removeEventListener("change", update)
+  }, [])
+
+  const rangeValue = value instanceof Date ? undefined : value
 
   let displayText: string | undefined
   if (mode === "range") {
-    const { from, to } = value ?? {}
+    const { from, to } = rangeValue ?? {}
     if (from && to) displayText = `${formatDate(from)} – ${formatDate(to)}`
     else if (from) displayText = `${formatDate(from)} – …`
-  } else if (value) {
+  } else if (value instanceof Date) {
     displayText = formatDate(value)
   }
 
@@ -74,7 +84,7 @@ const FormDate = ({
             variant="outline"
             disabled={disabled}
             className={cn(
-              "text-md w-full justify-start gap-2 rounded-sm bg-white px-2 py-5 font-normal shadow-none hover:bg-white",
+              "w-full justify-start gap-2 rounded-sm bg-white px-2 py-5 text-base font-normal shadow-none hover:bg-white",
               "focus:ring-[3px] focus:ring-primary data-[state=open]:ring-[3px] data-[state=open]:ring-primary",
               !displayText &&
                 "text-muted-foreground hover:text-muted-foreground"
@@ -87,14 +97,17 @@ const FormDate = ({
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent align="start" className="w-auto p-0">
+        <PopoverContent
+          align="start"
+          className="max-h-[calc(100dvh-2rem)] w-auto max-w-[calc(100vw-2rem)] overflow-y-auto p-0"
+        >
           {mode === "range" ? (
             <Calendar
               mode="range"
-              numberOfMonths={2}
+              numberOfMonths={isMobile ? 1 : 2}
               locale={idLocale}
-              selected={value}
-              defaultMonth={value?.from}
+              selected={rangeValue}
+              defaultMonth={rangeValue?.from}
               disabled={disabledDates}
               onSelect={(range) => {
                 onChange?.(range)
@@ -105,8 +118,8 @@ const FormDate = ({
             <Calendar
               mode="single"
               locale={idLocale}
-              selected={value}
-              defaultMonth={value}
+              selected={value instanceof Date ? value : undefined}
+              defaultMonth={value instanceof Date ? value : undefined}
               disabled={disabledDates}
               onSelect={(date) => {
                 onChange?.(date)

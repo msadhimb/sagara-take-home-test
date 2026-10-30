@@ -1,5 +1,3 @@
-import { cn } from "cn"
-import { FooterLogo } from "../type"
 import Logo from "@/components/Icons/logo"
 
 interface FooterBrandProps {
