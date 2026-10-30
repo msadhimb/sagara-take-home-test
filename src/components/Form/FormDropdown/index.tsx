@@ -58,6 +58,11 @@ const FormDropdown = ({
     isItemEqualToValue: (a: FormOption, b: FormOption) => a.value === b.value,
   }
 
+  const selectedLabels = selectedValues
+    .map((v) => options.find((o) => o.value === v)?.label)
+    .filter(Boolean)
+    .join(", ")
+
   const field = (
     <div ref={anchor} className="relative">
       <ComboboxPrimitive.Input
@@ -65,13 +70,20 @@ const FormDropdown = ({
           <FormInput
             bare
             id={id}
-            placeholder={placeholder}
+            placeholder={isCheckbox && selectedLabels ? undefined : placeholder}
             aria-invalid={!!error}
             className="pr-9"
             icon={icon}
           />
         }
       />
+      {isCheckbox && selectedLabels && (
+        <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center truncate pl-3 text-sm"
+          style={icon ? { paddingLeft: "calc(1rem + 15px)" } : undefined}
+        >
+          {selectedLabels}
+        </span>
+      )}
       <ComboboxPrimitive.Trigger
         aria-label="Buka daftar pilihan"
         className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground transition-colors hover:text-primary"
