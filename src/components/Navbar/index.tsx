@@ -1,3 +1,5 @@
+"use client"
+
 import { Book, Menu, Sunset, Trees, Zap } from "lucide-react"
 import { cn } from "cn"
 import { Accordion } from "@/components/ui/accordion"
@@ -18,6 +20,7 @@ import renderMenuItem from "./components/RenderMenuItem"
 import renderMobileMenuItem from "./components/RenderMobileMenuItem"
 import Logo from "../Icons/logo"
 import Link from "next/link"
+import { useUserStore } from "@/store/user"
 
 const Navbar = ({
   menu = [
@@ -93,11 +96,21 @@ const Navbar = ({
     },
   ],
   auth = {
-    login: { title: "Login", url: "#" },
-    signup: { title: "Sign up", url: "#" },
+    login: { title: "Login", url: "/auth?mode=login" },
+    signup: { title: "Sign up", url: "/auth?mode=register" },
   },
   className,
 }: Navbar1Props) => {
+  const user = useUserStore((state) => state.user)
+  const initials = user
+    ? user.name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() ?? "")
+        .join("")
+    : ""
+
   return (
     <section className={cn("py-3 md:py-5", className)}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -117,12 +130,28 @@ const Navbar = ({
             </NavigationMenu>
           </div>
           <div className="flex shrink-0 items-center gap-5 font-medium">
-            <Link href={auth.login.url} className="rounded-sm text-primary">
-              {auth.login.title}
-            </Link>
-            <Button asChild size="lg" className="rounded-sm">
-              <a href={auth.signup.url}>{auth.signup.title}</a>
-            </Button>
+            {user ? (
+              <div className="flex items-center gap-2.5">
+                <span className="grid size-9 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                  {initials}
+                </span>
+                <span className="max-w-40 truncate text-sm font-semibold text-neutral-800">
+                  {user.name}
+                </span>
+              </div>
+            ) : (
+              <>
+                <Link
+                  href={auth.login.url}
+                  className="rounded-sm text-primary"
+                >
+                  {auth.login.title}
+                </Link>
+                <Button asChild size="lg" className="rounded-sm">
+                  <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                </Button>
+              </>
+            )}
           </div>
         </nav>
 
@@ -157,12 +186,30 @@ const Navbar = ({
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <a href={auth.login.url}>{auth.login.title}</a>
-                    </Button>
-                    <Button asChild>
-                      <a href={auth.signup.url}>{auth.signup.title}</a>
-                    </Button>
+                    {user ? (
+                      <div className="flex items-center gap-3 rounded-sm border border-primary/10 p-3">
+                        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                          {initials}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-neutral-800">
+                            {user.name}
+                          </p>
+                          <p className="truncate text-xs text-neutral-500">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <Button asChild variant="outline">
+                          <Link href={auth.login.url}>{auth.login.title}</Link>
+                        </Button>
+                        <Button asChild>
+                          <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>

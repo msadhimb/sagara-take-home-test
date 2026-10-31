@@ -3,8 +3,7 @@ import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
-import Navbar from "@/components/Navbar"
-import Footer from "@/components/Footer"
+import SiteChrome from "@/components/SiteChrome"
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -34,9 +33,7 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <Navbar />
-          {children}
-          <Footer />
+          <SiteChrome>{children}</SiteChrome>
         </ThemeProvider>
       </body>
     </html>
