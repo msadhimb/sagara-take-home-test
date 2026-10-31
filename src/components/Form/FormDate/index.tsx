@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, type ReactNode } from "react"
+import { addDays, differenceInCalendarDays, startOfToday } from "date-fns"
 import { id as idLocale } from "date-fns/locale"
 import type { DateRange, Matcher } from "react-day-picker"
 import { Button } from "@/components/ui/button"
@@ -45,8 +46,38 @@ const FormDate = ({
   onChange,
   icon,
 }: FormDateProps) => {
+  const rangeValue = value instanceof Date ? undefined : value
+
   const [open, setOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [draft, setDraft] = useState<DateRange | undefined>(undefined)
+  const [month, setMonth] = useState<Date>(() => new Date())
+  const [displayText, setDisplayText] = useState("")
+
+  const handleOpenChange = (next: boolean) => {
+    if (next && mode === "range") {
+      setDraft(rangeValue)
+      setMonth(rangeValue?.from ?? new Date())
+    }
+    setOpen(next)
+  }
+
+  const applyPreset = (days: number) => {
+    const from = draft?.from ?? startOfToday()
+    setDraft({ from, to: addDays(from, days - 1) })
+    setMonth(from)
+  }
+
+  const handleConfirm = () => {
+    if (!draft?.from) return
+    onChange?.({ from: draft.from, to: draft.to ?? draft.from })
+    setOpen(false)
+  }
+
+  const activeDays =
+    draft?.from && draft.to
+      ? differenceInCalendarDays(draft.to, draft.from) + 1
+      : undefined
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 767px)")
@@ -56,16 +87,15 @@ const FormDate = ({
     return () => query.removeEventListener("change", update)
   }, [])
 
-  const rangeValue = value instanceof Date ? undefined : value
-
-  let displayText: string | undefined
-  if (mode === "range") {
-    const { from, to } = rangeValue ?? {}
-    if (from && to) displayText = `${formatDate(from)} – ${formatDate(to)}`
-    else if (from) displayText = `${formatDate(from)} – …`
-  } else if (value instanceof Date) {
-    displayText = formatDate(value)
-  }
+  useEffect(() => {
+    if (mode === "range") {
+      const { from, to } = rangeValue ?? {}
+      if (from && to) setDisplayText(`${formatDate(from)} – ${formatDate(to)}`)
+      else if (from) setDisplayText(`${formatDate(from)} – …`)
+    } else if (value instanceof Date) {
+      setDisplayText(formatDate(value))
+    }
+  }, [mode])
 
   return (
     <FormField
@@ -76,7 +106,7 @@ const FormDate = ({
       error={error}
       containerClassName={containerClassName}
     >
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
             id={id}
@@ -84,7 +114,7 @@ const FormDate = ({
             variant="outline"
             disabled={disabled}
             className={cn(
-              "w-full justify-start gap-2 rounded-sm bg-white px-2 py-5 text-base font-normal shadow-none hover:bg-white",
+              "w-full justify-start gap-2 rounded-sm bg-white px-2 py-5 text-base font-normal text-neutral-900 shadow-none hover:bg-white hover:text-neutral-900",
               "focus:ring-[3px] focus:ring-primary data-[state=open]:ring-[3px] data-[state=open]:ring-primary",
               !displayText &&
                 "text-muted-foreground hover:text-muted-foreground"
@@ -102,18 +132,49 @@ const FormDate = ({
           className="max-h-[calc(100dvh-2rem)] w-auto max-w-[calc(100vw-2rem)] overflow-y-auto p-0"
         >
           {mode === "range" ? (
-            <Calendar
-              mode="range"
-              numberOfMonths={isMobile ? 1 : 2}
-              locale={idLocale}
-              selected={rangeValue}
-              defaultMonth={rangeValue?.from}
-              disabled={disabledDates}
-              onSelect={(range) => {
-                onChange?.(range)
-                if (range?.from && range?.to) setOpen(false)
-              }}
-            />
+            <>
+              <Calendar
+                mode="range"
+                numberOfMonths={isMobile ? 1 : 2}
+                locale={idLocale}
+                selected={draft}
+                month={month}
+                onMonthChange={setMonth}
+                disabled={disabledDates}
+                onSelect={setDraft}
+              />
+
+              <div className="flex flex-col gap-3 border-t border-neutral-100 bg-neutral-50/70 p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap gap-2">
+                  {[1, 7, 14, 30].map((days) => (
+                    <Button
+                      key={days}
+                      type="button"
+                      size="sm"
+                      variant={activeDays === days ? "default" : "outline"}
+                      aria-pressed={activeDays === days}
+                      onClick={() => applyPreset(days)}
+                      className={cn(
+                        "h-7 rounded-full px-3 text-xs font-medium shadow-none",
+                        activeDays !== days &&
+                          "bg-white text-neutral-700 hover:bg-white hover:text-primary"
+                      )}
+                    >
+                      {days} day
+                    </Button>
+                  ))}
+                </div>
+
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={!draft?.from}
+                  onClick={handleConfirm}
+                >
+                  Select date
+                </Button>
+              </div>
+            </>
           ) : (
             <Calendar
               mode="single"
