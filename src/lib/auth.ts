@@ -1,10 +1,3 @@
-/**
- * Mocked auth API. Replace the bodies with real network calls later.
- *
- * Test rules:
- * - code "999999" verifies successfully, any other code fails
- * - email "offline@example.com" simulates a network failure (throws)
- */
 const MOCK_DELAY = 900
 const SUCCESS_CODE = "999999"
 const OFFLINE_EMAIL = "offline@example.com"
@@ -18,7 +11,7 @@ export interface VerificationResponse {
   ok: boolean
 }
 
-interface VerifyEmailPayload {
+interface otpVerifyPayload {
   email: string
   code: string
 }
@@ -30,10 +23,10 @@ interface ResendVerificationPayload {
 const isOffline = (email: string) =>
   email.trim().toLowerCase() === OFFLINE_EMAIL
 
-export async function verifyEmail({
+export async function otpVerify({
   email,
   code,
-}: VerifyEmailPayload): Promise<VerificationResponse> {
+}: otpVerifyPayload): Promise<VerificationResponse> {
   await wait(MOCK_DELAY)
 
   if (isOffline(email)) {
@@ -60,10 +53,6 @@ export interface CompleteIdentityPayload {
   companyName: string
 }
 
-/**
- * Mocked profile completion request. Replace with the real endpoint later.
- * Company name "offline" simulates a network failure for error-state testing.
- */
 export async function completeIdentity(
   payload: CompleteIdentityPayload
 ): Promise<void> {

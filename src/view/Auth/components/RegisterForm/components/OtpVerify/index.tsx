@@ -5,22 +5,22 @@ import { Controller, useForm } from "react-hook-form"
 import { Loader2, Timer } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useCountdown } from "@/hooks/useCountdown"
-import { resendVerification, verifyEmail } from "@/lib/auth"
+import { resendVerification, otpVerify } from "@/lib/auth"
 import { cn } from "@/lib/utils"
 import FormOtp from "@/components/Form/FormOtp"
 import { formatTime } from "@/helper/formatTime"
 
-interface VerifyEmailProps {
+interface OtpVerifyProps {
   email: string
   onVerified: () => void
 }
 
-interface VerifyEmailValues {
+interface OtpVerifyValues {
   code: string
 }
 
-const VerifyEmail = ({ email, onVerified }: VerifyEmailProps) => {
-  const { control, watch, reset, handleSubmit } = useForm<VerifyEmailValues>({
+const OtpVerify = ({ email, onVerified }: OtpVerifyProps) => {
+  const { control, watch, reset, handleSubmit } = useForm<OtpVerifyValues>({
     defaultValues: { code: "" },
   })
 
@@ -48,14 +48,14 @@ const VerifyEmail = ({ email, onVerified }: VerifyEmailProps) => {
     ? `Too many attempts. Please try again in ${formatTime(lockRemaining)}.`
     : error
 
-  const handleVerify = async (values: VerifyEmailValues) => {
+  const handleVerify = async (values: OtpVerifyValues) => {
     if (values.code.length !== 6 || verifying || isLocked) return
 
     setVerifying(true)
     setError(null)
 
     try {
-      const result = await verifyEmail({ email, code: values.code })
+      const result = await otpVerify({ email, code: values.code })
 
       if (result.ok) {
         onVerified()
@@ -125,15 +125,6 @@ const VerifyEmail = ({ email, onVerified }: VerifyEmailProps) => {
   return (
     <div className="w-full overflow-hidden">
       <div className="flex flex-col items-center justify-center gap-5 text-center">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Email Verification
-          </h1>
-          <p className="mt-1.5 text-sm break-words text-neutral-500">
-            We have sent a verification code to {email}
-          </p>
-        </div>
-
         <div className="flex w-full flex-col items-center gap-4">
           <Controller
             name="code"
@@ -223,4 +214,4 @@ const VerifyEmail = ({ email, onVerified }: VerifyEmailProps) => {
   )
 }
 
-export default VerifyEmail
+export default OtpVerify

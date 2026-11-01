@@ -3,19 +3,18 @@
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Controller, useFormContext } from "react-hook-form"
-import { motion, stagger, useReducedMotion } from "motion/react"
+import { motion, stagger } from "motion/react"
 import { ArrowRight, Lock, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import FormInput from "@/components/Form/FormInput"
 import { simulateRequest } from "@/lib/auth"
-import { useUserStore } from "@/store/user"
+import { useAuthStore } from "../../store"
 
 const LoginForm = () => {
   const router = useRouter()
-  const { login } = useUserStore()
-  const { requestProfileCompletion } = useUserStore()
+  const { login, requestProfileCompletion } = useAuthStore()
 
   const {
     handleSubmit,

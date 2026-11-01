@@ -20,7 +20,7 @@ import renderMenuItem from "./components/RenderMenuItem"
 import renderMobileMenuItem from "./components/RenderMobileMenuItem"
 import Logo from "../Icons/logo"
 import Link from "next/link"
-import { useUserStore } from "@/store/user"
+import { useAuthStore } from "@/view/Auth/store"
 
 const Navbar = ({
   menu = [
@@ -101,7 +101,7 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
-  const user = useUserStore((state) => state.user)
+  const user = useAuthStore((state) => state.user)
   const initials = user
     ? user.name
         .trim()
@@ -141,10 +141,7 @@ const Navbar = ({
               </div>
             ) : (
               <>
-                <Link
-                  href={auth.login.url}
-                  className="rounded-sm text-primary"
-                >
+                <Link href={auth.login.url} className="rounded-sm text-primary">
                   {auth.login.title}
                 </Link>
                 <Button asChild size="lg" className="rounded-sm">
@@ -206,7 +203,9 @@ const Navbar = ({
                           <Link href={auth.login.url}>{auth.login.title}</Link>
                         </Button>
                         <Button asChild>
-                          <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                          <Link href={auth.signup.url}>
+                            {auth.signup.title}
+                          </Link>
                         </Button>
                       </>
                     )}

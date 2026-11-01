@@ -8,18 +8,14 @@ import { ArrowRight, Building2, Loader2, Lock, Mail, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import FormInput from "@/components/Form/FormInput"
 import { simulateRequest } from "@/lib/auth"
-import { formVariants } from "../../animation"
+import { formVariants } from "../../helper/animation"
 import PasswordChecklist from "./components/PasswordChecklist"
-import VerifyEmail from "./components/VerifyEmail"
+import VerifyEmail from "./components/OtpVerify"
+import { useAuthStore } from "../../store"
 
-export type RegisterStep = "form" | "sending" | "verify"
-
-interface RegisterFormProps {
-  onStepChange?: (step: RegisterStep) => void
-}
-
-const RegisterForm = ({ onStepChange }: RegisterFormProps) => {
+const RegisterForm = () => {
   const router = useRouter()
+  const { step, setStep } = useAuthStore()
 
   const {
     handleSubmit,
@@ -28,12 +24,10 @@ const RegisterForm = ({ onStepChange }: RegisterFormProps) => {
   } = useFormContext()
   const password = useWatch({ control, name: "password" }) ?? ""
 
-  const [step, setStep] = useState<RegisterStep>("form")
   const [email, setEmail] = useState("")
 
-  const updateStep = (next: RegisterStep) => {
+  const updateStep = (next: string) => {
     setStep(next)
-    onStepChange?.(next)
   }
 
   const handleRegister = async (values: any) => {
@@ -50,7 +44,7 @@ const RegisterForm = ({ onStepChange }: RegisterFormProps) => {
   return (
     <div className="flex w-full flex-col items-center">
       <AnimatePresence mode="wait" initial={false}>
-        {step === "form" ? (
+        {step === "initial" ? (
           <motion.div
             key="form"
             custom={1}

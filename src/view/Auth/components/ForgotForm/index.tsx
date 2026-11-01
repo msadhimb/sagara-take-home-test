@@ -1,20 +1,15 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { Controller, useFormContext } from "react-hook-form"
 import { AnimatePresence, motion, stagger } from "motion/react"
 import { ArrowLeft, ArrowRight, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import FormInput from "@/components/Form/FormInput"
-import { useUserStore } from "@/store/user"
 import Link from "next/link"
 import { useState } from "react"
-import { formVariants } from "../../animation"
+import { formVariants } from "../../helper/animation"
 
 const ForgotForm = () => {
-  const router = useRouter()
-  const { login } = useUserStore()
-
   const [step, setStep] = useState(1)
   const {
     handleSubmit,

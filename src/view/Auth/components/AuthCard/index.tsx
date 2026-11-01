@@ -7,13 +7,18 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { AnimatePresence, motion } from "motion/react"
 import Link from "next/link"
 import LoginForm from "../LoginForm"
-import RegisterForm, { type RegisterStep } from "../RegisterForm"
+import RegisterForm from "../RegisterForm"
 import ForgotForm from "../ForgotForm"
 import { loginSchema } from "../LoginForm/validation"
 import { registerSchema } from "../RegisterForm/validation"
 import { forgotSchema } from "../ForgotForm/validation"
-import { authTransition, formVariants, textVariants } from "../../animation"
+import {
+  authTransition,
+  formVariants,
+  textVariants,
+} from "../../helper/animation"
 import { parseMode } from "./helper/parseMode"
+import { useAuthStore } from "../../store"
 
 type AuthMode = "login" | "register" | "forgot"
 
@@ -34,9 +39,9 @@ const AuthCard = () => {
   const modeRef = useRef<AuthMode>("login")
   const pendingModeRef = useRef<AuthMode | null>(null)
   const isNavigatingRef = useRef(false)
+  const { step } = useAuthStore()
 
   const [mode, setMode] = useState<AuthMode>(urlMode)
-  const [registerStep, setRegisterStep] = useState<RegisterStep>("form")
   const [direction, setDirection] = useState(1)
   const [contentHeight, setContentHeight] = useState<number | "auto">("auto")
 
@@ -59,7 +64,9 @@ const AuthCard = () => {
     defaultValues: authDefaults,
   })
 
-  const isRegisterVerifying = mode === "register" && registerStep !== "form"
+  const { watch } = form
+
+  const isRegisterVerifying = mode === "register" && step !== "initial"
 
   const schemas = {
     login: loginSchema,
@@ -68,29 +75,23 @@ const AuthCard = () => {
   }
 
   const getTitle = (mode: AuthMode) => {
-    if (mode === "forgot") return "Forgot Password"
-
-    return "Book your Room Now!"
-  }
-
-  const getSubtitle = (mode: AuthMode) => {
-    if (mode === "forgot") {
-      return "We have sent you an email with a password reset link to janedoe@gmail.com"
-    }
-
-    return "Please logged in to flexible and easy access."
-  }
-
-  const getStatusText = (mode: AuthMode, step: RegisterStep) => {
     if (mode === "forgot") return "Forgot Password form"
 
     if (mode === "register") {
-      if (step === "form") return "Sign Up form"
+      if (step === "initial") return "Sign Up form"
 
-      return "Email verification form"
+      return "Email Verification"
     }
 
     return "Sign In form"
+  }
+
+  const getSubtitle = (mode: AuthMode) => {
+    if (mode === "forgot" || step !== "initial") {
+      return `We have sent you an email with a password reset link to ${watch("email")}`
+    }
+
+    return "Please logged in to flexible and easy access."
   }
 
   const getSwitchContent = (mode: AuthMode) => {
@@ -120,7 +121,6 @@ const AuthCard = () => {
     const email = form.getValues("email")
 
     modeRef.current = to
-    setRegisterStep("form")
     form.reset({ ...authDefaults, email })
   }
 
@@ -128,15 +128,13 @@ const AuthCard = () => {
     if (mode === "forgot") return <ForgotForm />
 
     if (mode === "register") {
-      return <RegisterForm onStepChange={setRegisterStep} />
+      return <RegisterForm />
     }
 
     return <LoginForm />
   }
 
   const renderHeading = () => {
-    if (isRegisterVerifying) return null
-
     return (
       <motion.div
         key={`${mode}-heading`}
@@ -217,10 +215,6 @@ const AuthCard = () => {
           className="overflow-hidden"
         >
           <div ref={contentRef} className="flex w-140 flex-col gap-10 p-6">
-            <p className="sr-only" role="status" aria-live="polite">
-              {getStatusText(mode, registerStep)}
-            </p>
-
             <AnimatePresence mode="wait" initial={false}>
               {renderHeading()}
             </AnimatePresence>

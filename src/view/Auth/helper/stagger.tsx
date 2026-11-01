@@ -1,4 +1,4 @@
-import { fieldVariants } from "../animation"
+import { fieldVariants } from "./animation"
 
 export const stagger = (index: number) => ({
   variants: fieldVariants,
