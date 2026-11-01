@@ -67,11 +67,7 @@ export interface Booking {
 }
 
 export type VoucherErrorCode =
-  | "not-found"
-  | "expired"
-  | "not-applicable"
-  | "used"
-  | "min-transaction"
+  "not-found" | "expired" | "not-applicable" | "used" | "min-transaction"
 
 export interface VoucherValidationResult {
   valid: boolean
@@ -241,10 +237,7 @@ const checkAvailabilitySync = ({
     return { available: false, message: "End time must be after start time" }
   }
 
-  if (
-    minutesOf(start) < OPEN_HOUR * 60 ||
-    minutesOf(end) > CLOSE_HOUR * 60
-  ) {
+  if (minutesOf(start) < OPEN_HOUR * 60 || minutesOf(end) > CLOSE_HOUR * 60) {
     return {
       available: false,
       message: `Room is only available between ${String(OPEN_HOUR).padStart(
@@ -311,11 +304,11 @@ export const createBooking = async (
     throw new Error("Product not found")
   }
 
-  const availability = checkAvailabilitySync(payload)
+  // const availability = checkAvailabilitySync(payload)
 
-  if (!availability.available) {
-    throw new Error(availability.message ?? "This slot is not available")
-  }
+  // if (!availability.available) {
+  //   throw new Error(availability.message ?? "This slot is not available")
+  // }
 
   const addOns: BookingAddOn[] = payload.addOns.map((input) => {
     const addOn = product.addOns.find((item) => item.id === input.id)
@@ -372,7 +365,10 @@ export const createBooking = async (
 
   const totals = calculateTotal({
     productAmount: primaryPrice.amount,
-    addOns: addOns.map((addOn) => ({ amount: addOn.unitPrice, qty: addOn.qty })),
+    addOns: addOns.map((addOn) => ({
+      amount: addOn.unitPrice,
+      qty: addOn.qty,
+    })),
     voucher: voucherRule,
   })
 

@@ -64,7 +64,9 @@ const Footer = (props: Props) => {
   const visibleSections = (sections ?? []).slice(0, MAX_SECTIONS)
 
   return (
-    <section className={cn("pt-16 pb-10 md:pt-24 lg:pt-32", className)}>
+    <section
+      className={cn("pt-16 pb-24 md:pt-24 lg:pt-32 lg:pb-10", className)}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <footer>
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-6">

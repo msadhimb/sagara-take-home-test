@@ -198,29 +198,29 @@ const BookingView = () => {
     }
   }, [product])
 
-  useEffect(() => {
-    if (!product) return
+  // useEffect(() => {
+  //   if (!product) return
 
-    let active = true
-    setCheckingSlot(true)
+  //   let active = true
+  //   setCheckingSlot(true)
 
-    checkAvailability({ productId: product.id, date, start, end })
-      .then((result) => {
-        if (!active) return
-        setSlotError(
-          result.available
-            ? null
-            : (result.message ?? "This time slot is not available")
-        )
-      })
-      .finally(() => {
-        if (active) setCheckingSlot(false)
-      })
+  //   checkAvailability({ productId: product.id, date, start, end })
+  //     .then((result) => {
+  //       if (!active) return
+  //       setSlotError(
+  //         result.available
+  //           ? null
+  //           : (result.message ?? "This time slot is not available")
+  //       )
+  //     })
+  //     .finally(() => {
+  //       if (active) setCheckingSlot(false)
+  //     })
 
-    return () => {
-      active = false
-    }
-  }, [product, date, start, end])
+  //   return () => {
+  //     active = false
+  //   }
+  // }, [product, date, start, end])
 
   if (!user) return null
 
@@ -272,8 +272,8 @@ const BookingView = () => {
           </Link>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-5">
-          <div className="col-span-3 space-y-5">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+          <div className="space-y-5 lg:col-span-3">
             <BookingSummaryCard
               product={product}
               date={date}
@@ -316,7 +316,7 @@ const BookingView = () => {
             />
           </div>
 
-          <div className="col-span-2">
+          <div className="lg:col-span-2">
             <PriceSummary
               productName={product.name}
               period={product.prices[0]?.period ?? product.period}
