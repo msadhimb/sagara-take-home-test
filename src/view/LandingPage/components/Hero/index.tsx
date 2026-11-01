@@ -126,7 +126,7 @@ const Hero = () => {
             </p>
           </div>
 
-          <div className="w-300 rounded-2xl bg-white p-4 text-left shadow-lg sm:p-5">
+          <div className="w-full rounded-2xl bg-white p-4 p-5 text-left shadow-lg lg:w-300">
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
                 <label
