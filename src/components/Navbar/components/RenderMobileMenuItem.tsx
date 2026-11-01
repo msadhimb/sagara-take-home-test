@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { MenuItem } from "../type"
 import SubMenuLink from "./SubMenuLink"
 import {
@@ -23,9 +24,13 @@ const renderMobileMenuItem = (item: MenuItem) => {
   }
 
   return (
-    <a key={item.title} href={item.url} className="text-base font-semibold">
+    <Link
+      key={item.title}
+      href={item.url}
+      className="text-base font-semibold"
+    >
       {item.title}
-    </a>
+    </Link>
   )
 }
 

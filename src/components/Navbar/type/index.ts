@@ -1,9 +1,12 @@
+import type { ReactNode } from "react"
+
 export interface MenuItem {
   title: string
   url: string
   description?: string
-  icon?: React.ReactNode
+  icon?: ReactNode
   items?: MenuItem[]
+  active?: boolean
 }
 
 export interface Navbar1Props {

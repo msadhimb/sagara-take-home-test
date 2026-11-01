@@ -48,33 +48,6 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
       return () => observer.disconnect()
     }, [icon])
 
-    const field = (
-      <div className="relative flex items-center">
-        {icon && (
-          <div ref={iconRef} className="absolute left-2 text-muted-foreground">
-            {icon}
-          </div>
-        )}
-        <Input
-          id={id}
-          required={required}
-          {...inputProps}
-          ref={ref}
-          className={cn(
-            "rounded-sm bg-white px-3 py-5 text-base focus-visible:ring-primary",
-            className
-          )}
-          style={
-            icon
-              ? { paddingLeft: `calc(1rem + ${iconWidth}px)`, ...style }
-              : style
-          }
-        />
-      </div>
-    )
-
-    if (bare) return field
-
     return (
       <FormField
         id={id}
@@ -84,7 +57,31 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
         error={error}
         containerClassName={containerClassName}
       >
-        {field}
+        <div className="relative flex items-center">
+          {icon && (
+            <div
+              ref={iconRef}
+              className="absolute left-2 text-muted-foreground"
+            >
+              {icon}
+            </div>
+          )}
+          <Input
+            id={id}
+            required={required}
+            {...inputProps}
+            ref={ref}
+            className={cn(
+              "rounded-sm bg-white px-3 py-5 text-base focus-visible:ring-primary",
+              className
+            )}
+            style={
+              icon
+                ? { paddingLeft: `calc(1rem + ${iconWidth}px)`, ...style }
+                : style
+            }
+          />
+        </div>
       </FormField>
     )
   }

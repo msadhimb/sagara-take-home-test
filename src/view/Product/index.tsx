@@ -1,9 +1,12 @@
 "use client"
 
-import { notFound, useParams } from "next/navigation"
+import { notFound, useParams, useRouter } from "next/navigation"
 import { useState } from "react"
 import type { DateRange } from "react-day-picker"
 import { products } from "@/data/products"
+import { toIsoDate } from "@/helper/formatDate"
+import { formatClock } from "@/helper/formatTime"
+import type { TimeRange } from "@/components/Form/FormTime"
 import ProductDateSelect from "./components/ProductDateSelect"
 import ProductGallery from "./components/ProductGallery"
 import ProductHeader from "./components/ProductHeader"
@@ -15,6 +18,7 @@ import ProductBookingCard from "./components/ProductBookingCard"
 import SimilarSpaces from "./components/SimilarSpaces"
 import PhotoGalleryModal from "./components/PhotoGalleryModal"
 import { Separator } from "@/components/ui/separator"
+import { useAuthStore } from "@/view/Auth/store"
 
 const ProductView = () => {
   const images = [
@@ -26,16 +30,25 @@ const ProductView = () => {
     "/assets/spaces/image-6.png",
   ]
   const params = useParams()
+  const router = useRouter()
+  const user = useAuthStore((state) => state.user)
   const slug = params?.slug
 
   const [date, setDate] = useState<Date | DateRange | undefined>(undefined)
+  const [time, setTime] = useState<TimeRange | undefined>(undefined)
   const [galleryOpen, setGalleryOpen] = useState(false)
   const [galleryStart, setGalleryStart] = useState<number | null>(null)
   const [gallerySession, setGallerySession] = useState(0)
 
-  const product: any = products.find((p) => p.slug === slug)
+  const product = products.find((p) => p.slug === slug)
+
+  if (!product) notFound()
+
   const similar = products.filter((p) => p.slug !== slug).slice(0, 4)
   const prices = product.prices
+
+  const startTime = time?.from
+  const endTime = time?.to
 
   const handleOpenGallery = (index: number | null) => {
     setGalleryStart(index)
@@ -47,9 +60,35 @@ const ProductView = () => {
     setGalleryOpen(false)
   }
 
+  const handleBook = () => {
+    const bookingDate = date instanceof Date ? date : date?.from
+
+    if (!bookingDate || !startTime || !endTime) return
+
+    const searchParams = new URLSearchParams({
+      productId: product.id,
+      date: toIsoDate(bookingDate),
+      start: formatClock(startTime),
+      end: formatClock(endTime),
+    })
+    const next = `/booking?${searchParams.toString()}`
+
+    if (!user) {
+      router.push(`/auth?mode=login&next=${encodeURIComponent(next)}`)
+      return
+    }
+
+    router.push(next)
+  }
+
   return (
     <div className="space-y-5 bg-white text-neutral-900">
-      <ProductDateSelect date={date} onDateChange={setDate} />
+      <ProductDateSelect
+        date={date}
+        onDateChange={setDate}
+        time={time}
+        onTimeChange={setTime}
+      />
 
       <ProductGallery
         images={images}
@@ -67,7 +106,13 @@ const ProductView = () => {
           <ProductAddOns addOns={product.addOns} />
         </div>
         <div className="col-span-2">
-          <ProductBookingCard date={date} />
+          <ProductBookingCard
+            date={date}
+            startTime={startTime}
+            endTime={endTime}
+            isAuthenticated={Boolean(user)}
+            onBook={handleBook}
+          />
         </div>
       </div>
 

@@ -18,3 +18,25 @@ export const formatDate = (value?: Date | string | null) => {
 
   return format(date, "dd/MM/yyyy")
 }
+
+export const parseIsoDate = (value?: string | null) => {
+  if (!value) return undefined
+
+  const date = parse(value, "yyyy-MM-dd", new Date())
+
+  if (!isValid(date)) return undefined
+
+  return date
+}
+
+export const toIsoDate = (value: Date) => format(value, "yyyy-MM-dd")
+
+export const formatDateLong = (value?: Date | string | null) => {
+  if (!value) return ""
+
+  const date = typeof value === "string" ? parseIsoDate(value) : value
+
+  if (!date || !isValid(date)) return ""
+
+  return format(date, "EEE, dd MMMM yyyy")
+}

@@ -1,3 +1,11 @@
+export const formatClock = (value?: Date | null) => {
+  if (!value) return ""
+
+  return `${String(value.getHours()).padStart(2, "0")}:${String(
+    value.getMinutes()
+  ).padStart(2, "0")}`
+}
+
 export const formatTime = (seconds: number) => {
   const safe = Math.max(0, seconds)
   const minutes = Math.floor(safe / 60)

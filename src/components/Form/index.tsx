@@ -9,6 +9,7 @@ export type FormFieldBaseProps = {
   description?: string
   error?: string
   containerClassName?: string
+  labelClassname?: string
 }
 
 export const getDescribedBy = (
@@ -34,10 +35,11 @@ export const FormField = ({
   error,
   containerClassName,
   children,
+  labelClassname,
 }: FormFieldProps) => {
   return (
     <div className={cn("flex w-full flex-col gap-2", containerClassName)}>
-      <Label htmlFor={id} className="gap-0">
+      <Label htmlFor={id} className={cn("gap-0", labelClassname)}>
         {label}
         {required && (
           <span className="text-destructive" aria-hidden>

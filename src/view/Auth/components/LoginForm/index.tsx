@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Controller, useFormContext } from "react-hook-form"
 import { motion } from "motion/react"
@@ -16,7 +16,11 @@ import CompleteIdentityModal from "./components/CompleteIdentityModal"
 
 const LoginForm = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login, step, setStep } = useAuthStore()
+
+  const nextPath = searchParams.get("next")
+  const redirectTo = nextPath?.startsWith("/") ? nextPath : "/"
 
   const {
     handleSubmit,
@@ -33,10 +37,7 @@ const LoginForm = () => {
 
   const handleLogin = async (values: any) => {
     await simulateRequest()
-    login({
-      email: values.email,
-      password: values.password,
-    })
+    login({ email: values.email })
 
     const isIdentityEmpty = !values.dateOfBirth || !values.companyName
 
@@ -45,12 +46,12 @@ const LoginForm = () => {
       return
     }
 
-    router.push("/")
+    router.push(redirectTo)
   }
 
   const handleIdentitySaved = () => {
     setStep("initial")
-    router.push("/")
+    router.push(redirectTo)
   }
 
   return (

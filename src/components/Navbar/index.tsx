@@ -15,12 +15,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { Navbar1Props } from "./type"
+import { Navbar1Props, type MenuItem } from "./type"
 import renderMenuItem from "./components/RenderMenuItem"
 import renderMobileMenuItem from "./components/RenderMobileMenuItem"
 import Logo from "../Icons/logo"
 import Link from "next/link"
 import { useAuthStore } from "@/view/Auth/store"
+
+const memberMenu: MenuItem[] = [
+  { title: "Home", url: "/" },
+  { title: "My Booking", url: "/my-booking" },
+]
 
 const Navbar = ({
   menu = [
@@ -102,6 +107,8 @@ const Navbar = ({
   className,
 }: Navbar1Props) => {
   const user = useAuthStore((state) => state.user)
+  const logout = useAuthStore((state) => state.logout)
+  const menuItems = user ? memberMenu : menu
   const initials = user
     ? user.name
         .trim()
@@ -125,7 +132,7 @@ const Navbar = ({
           <div className="flex min-w-0 items-center">
             <NavigationMenu>
               <NavigationMenuList>
-                {menu.map((item) => renderMenuItem(item))}
+                {menuItems.map((item) => renderMenuItem(item))}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -179,24 +186,29 @@ const Navbar = ({
                     collapsible
                     className="flex w-full flex-col gap-4"
                   >
-                    {menu.map((item) => renderMobileMenuItem(item))}
+                    {menuItems.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
                     {user ? (
-                      <div className="flex items-center gap-3 rounded-sm border border-primary/10 p-3">
-                        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                          {initials}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-neutral-800">
-                            {user.name}
-                          </p>
-                          <p className="truncate text-xs text-neutral-500">
-                            {user.email}
-                          </p>
+                      <>
+                        <div className="flex items-center gap-3 rounded-sm border border-primary/10 p-3">
+                          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                            {initials}
+                          </span>
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-neutral-800">
+                              {user.name}
+                            </p>
+                            <p className="truncate text-xs text-neutral-500">
+                              {user.email}
+                            </p>
+                          </div>
                         </div>
-                      </div>
+                        <Button variant="outline" onClick={logout}>
+                          Logout
+                        </Button>
+                      </>
                     ) : (
                       <>
                         <Button asChild variant="outline">

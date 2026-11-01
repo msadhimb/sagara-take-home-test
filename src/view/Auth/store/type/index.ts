@@ -1,15 +1,16 @@
+import type { Booking } from "@/lib/booking"
+
 export interface User {
   name: string
   email: string
-  password: string
   dateOfBirth?: string
   companyName?: string
   isProfileComplete: boolean
+  bookings: Booking[]
 }
 
 export interface LoginPayload {
   email: string
-  password?: string
   name?: string
 }
 export interface UserState {
@@ -17,6 +18,7 @@ export interface UserState {
   profilePrompt: boolean
   step: string
   login: (payload: LoginPayload) => void
+  addBooking: (booking: Booking) => void
   requestProfileCompletion: () => void
   dismissProfilePrompt: () => void
   logout: () => void
