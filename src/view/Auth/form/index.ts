@@ -1,9 +1,11 @@
 export const authDefaults = {
   name: "",
   email: "",
-  phone_number: "",
+  companyId: "",
   password: "",
-  confirm_password: "",
   remember: true,
   otp: "",
+  confirm_password: "",
+  dateOfBirth: "",
+  companyName: "",
 }

@@ -4,7 +4,7 @@ import { UserState } from "./type"
 export const useAuthStore = create<UserState>((set) => ({
   user: null,
   profilePrompt: false,
-  step: "initial",
+  step: "identify",
   login: ({ email, password = "password", name = "User" }) =>
     set({
       user: {

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { FormField } from "../"
-import { formatDate } from "@/helper/formatDate"
+import { formatDate, parseDateValue } from "@/helper/formatDate"
 
 interface FormDateProps {
   id?: string
@@ -25,7 +25,7 @@ interface FormDateProps {
   disabled?: boolean
   disabledDates?: Matcher | Matcher[]
   mode: "single" | "range"
-  value?: Date | DateRange
+  value?: Date | DateRange | string
   onChange?: (value: Date | DateRange | undefined) => void
   placeholder?: string
   icon?: ReactNode
@@ -46,13 +46,37 @@ const FormDate = ({
   onChange,
   icon,
 }: FormDateProps) => {
-  const rangeValue = value instanceof Date ? undefined : value
+  const rangeValue =
+    typeof value === "string" || value instanceof Date ? undefined : value
+  const singleValue =
+    typeof value === "string" || value instanceof Date
+      ? parseDateValue(value)
+      : undefined
 
   const [open, setOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [draft, setDraft] = useState<DateRange | undefined>(undefined)
   const [month, setMonth] = useState<Date>(() => new Date())
-  const [displayText, setDisplayText] = useState("")
+
+  const activeDays =
+    draft?.from && draft.to
+      ? differenceInCalendarDays(draft.to, draft.from) + 1
+      : undefined
+
+  const getDisplayText = () => {
+    if (mode === "range") {
+      if (rangeValue?.from && rangeValue.to) {
+        return `${formatDate(rangeValue.from)} – ${formatDate(rangeValue.to)}`
+      }
+      if (rangeValue?.from) return `${formatDate(rangeValue.from)} – …`
+
+      return ""
+    }
+
+    return formatDate(singleValue)
+  }
+
+  const displayText = getDisplayText()
 
   const handleOpenChange = (next: boolean) => {
     if (next && mode === "range") {
@@ -74,10 +98,10 @@ const FormDate = ({
     setOpen(false)
   }
 
-  const activeDays =
-    draft?.from && draft.to
-      ? differenceInCalendarDays(draft.to, draft.from) + 1
-      : undefined
+  const handleSingleSelect = (date: Date | undefined) => {
+    onChange?.(date)
+    if (date) setOpen(false)
+  }
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 767px)")
@@ -86,16 +110,6 @@ const FormDate = ({
     query.addEventListener("change", update)
     return () => query.removeEventListener("change", update)
   }, [])
-
-  useEffect(() => {
-    if (mode === "range") {
-      const { from, to } = rangeValue ?? {}
-      if (from && to) setDisplayText(`${formatDate(from)} – ${formatDate(to)}`)
-      else if (from) setDisplayText(`${formatDate(from)} – …`)
-    } else if (value instanceof Date) {
-      setDisplayText(formatDate(value))
-    }
-  }, [mode])
 
   return (
     <FormField
@@ -122,7 +136,7 @@ const FormDate = ({
           >
             {icon && icon}
             <span className="truncate text-sm">
-              {displayText ?? placeholder}
+              {displayText || placeholder}
             </span>
           </Button>
         </PopoverTrigger>
@@ -179,13 +193,13 @@ const FormDate = ({
             <Calendar
               mode="single"
               locale={idLocale}
-              selected={value instanceof Date ? value : undefined}
-              defaultMonth={value instanceof Date ? value : undefined}
+              captionLayout="dropdown"
+              startMonth={new Date(1940, 0)}
+              endMonth={new Date()}
+              selected={singleValue}
+              defaultMonth={singleValue}
               disabled={disabledDates}
-              onSelect={(date) => {
-                onChange?.(date)
-                if (date) setOpen(false)
-              }}
+              onSelect={handleSingleSelect}
             />
           )}
         </PopoverContent>

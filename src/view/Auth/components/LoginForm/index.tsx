@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Controller, useFormContext } from "react-hook-form"
-import { motion, stagger } from "motion/react"
+import { motion } from "motion/react"
 import { ArrowRight, Lock, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -11,10 +11,12 @@ import { Label } from "@/components/ui/label"
 import FormInput from "@/components/Form/FormInput"
 import { simulateRequest } from "@/lib/auth"
 import { useAuthStore } from "../../store"
+import { fieldVariants } from "../../helper/animation"
+import CompleteIdentityModal from "./components/CompleteIdentityModal"
 
 const LoginForm = () => {
   const router = useRouter()
-  const { login, requestProfileCompletion } = useAuthStore()
+  const { login, step, setStep } = useAuthStore()
 
   const {
     handleSubmit,
@@ -22,13 +24,32 @@ const LoginForm = () => {
     formState: { errors, isSubmitting },
   } = useFormContext()
 
+  const stagger = (index: number) => ({
+    variants: fieldVariants,
+    initial: "hidden" as const,
+    animate: "visible" as const,
+    custom: index,
+  })
+
   const handleLogin = async (values: any) => {
     await simulateRequest()
     login({
       email: values.email,
       password: values.password,
     })
-    requestProfileCompletion()
+
+    const isIdentityEmpty = !values.dateOfBirth || !values.companyName
+
+    if (isIdentityEmpty) {
+      setStep("identity")
+      return
+    }
+
+    router.push("/")
+  }
+
+  const handleIdentitySaved = () => {
+    setStep("initial")
     router.push("/")
   }
 
@@ -107,17 +128,22 @@ const LoginForm = () => {
         </motion.div>
       </div>
 
-      <motion.div {...stagger(3)}>
+      <motion.div {...stagger(3)} className="w-full">
         <Button
           type="button"
           onClick={handleSubmit(handleLogin)}
           disabled={isSubmitting}
-          className="h-11 rounded-sm px-24 text-sm"
+          className="h-11 w-full rounded-sm text-sm"
         >
           {isSubmitting ? "Signing In..." : "Sign In"}
           {!isSubmitting && <ArrowRight className="size-4" />}
         </Button>
       </motion.div>
+
+      <CompleteIdentityModal
+        open={step === "identity"}
+        onSaved={handleIdentitySaved}
+      />
     </div>
   )
 }
