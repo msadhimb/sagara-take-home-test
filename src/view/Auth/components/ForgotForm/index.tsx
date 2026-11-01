@@ -6,12 +6,15 @@ import { ArrowLeft, ArrowRight, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import FormInput from "@/components/Form/FormInput"
 import Link from "next/link"
-import { useState } from "react"
 import { formVariants } from "../../helper/animation"
+import { useAuthStore } from "../../store"
+import OtpVerify from "../OtpVerify"
+import ResetPassword from "./components/ResetPassword"
 
 const ForgotForm = () => {
-  const [step, setStep] = useState(1)
+  const { step, setStep } = useAuthStore()
   const {
+    watch,
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
@@ -20,7 +23,7 @@ const ForgotForm = () => {
   const handleForgot = async (values: any) => {
     // await simulateRequest()
     // login({ email: values.email })
-    setStep(2)
+    setStep("otp-forgot")
     // router.push("/")
   }
 
@@ -34,7 +37,7 @@ const ForgotForm = () => {
         exit="exit"
         className="flex flex-col items-center gap-15"
       >
-        {step === 1 ? (
+        {step === "initial" ? (
           <>
             <div className="flex w-full flex-col gap-5">
               <motion.div {...stagger(0)}>
@@ -79,8 +82,17 @@ const ForgotForm = () => {
               </Link>
             </motion.div>
           </>
+        ) : step === "otp-forgot" ? (
+          <>
+            <OtpVerify
+              email={watch("email")}
+              onVerified={() => {
+                setStep("reset")
+              }}
+            />
+          </>
         ) : (
-          <></>
+          <ResetPassword />
         )}
       </motion.div>
     </AnimatePresence>

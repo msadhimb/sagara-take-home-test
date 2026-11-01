@@ -75,7 +75,11 @@ const AuthCard = () => {
   }
 
   const getTitle = (mode: AuthMode) => {
-    if (mode === "forgot") return "Forgot Password form"
+    if (mode === "forgot") {
+      if (step === "initial") return "Forgot Password form"
+      if (step === "otp-forgot") return "Otp Verification"
+      return "Reset your Password"
+    }
 
     if (mode === "register") {
       if (step === "initial") return "Sign Up form"
@@ -87,8 +91,12 @@ const AuthCard = () => {
   }
 
   const getSubtitle = (mode: AuthMode) => {
-    if (mode === "forgot" || step !== "initial") {
-      return `We have sent you an email with a password reset link to ${watch("email")}`
+    if (mode === "forgot") {
+      if (step === "initial")
+        return "Forgot your password? Enter your email address below to reset it and regain access to your account."
+      if (step === "otp-forgot")
+        return `We have sent you an email with a password reset link to ${watch("email")}`
+      return "Please enter the One-Time Password (OTP) sent to your email to complete the verification process."
     }
 
     return "Please logged in to flexible and easy access."

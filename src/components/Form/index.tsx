@@ -37,7 +37,7 @@ export const FormField = ({
 }: FormFieldProps) => {
   return (
     <div className={cn("flex w-full flex-col gap-2", containerClassName)}>
-      <Label htmlFor={id}>
+      <Label htmlFor={id} className="gap-0">
         {label}
         {required && (
           <span className="text-destructive" aria-hidden>
