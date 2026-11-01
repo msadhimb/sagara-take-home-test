@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+import ActionModal from "../ActionModal"
 
 const AUTH_ROUTES = ["/auth"]
 

@@ -1,16 +1,26 @@
 import { Check, CheckCircle, X, XCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { passwordRules } from "../../validation/password"
+import { passwordResetRules, passwordRules } from "../../validation/password"
 
 interface PasswordChecklistProps {
   password: string
+  confirmPassword?: string
+  matchPassword?: boolean
 }
 
-const PasswordChecklist = ({ password }: PasswordChecklistProps) => {
+const PasswordChecklist = ({
+  password,
+  confirmPassword,
+  matchPassword = false,
+}: PasswordChecklistProps) => {
+  const rules = matchPassword ? passwordResetRules : passwordRules
+
   return (
     <ul className="mt-2 flex flex-col gap-1" aria-live="polite">
-      {passwordRules.map((rule) => {
-        const passed = rule.test(password)
+      {rules.map((rule) => {
+        const passed = rule.test(password, {
+          confirm_password: confirmPassword,
+        })
 
         return (
           <li

@@ -4,6 +4,8 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import SiteChrome from "@/components/SiteChrome"
+import ActionModal from "@/components/ActionModal"
+import ClientProvider from "@/components/ClientProvider"
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -33,7 +35,9 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <SiteChrome>{children}</SiteChrome>
+          <SiteChrome>
+            <ClientProvider>{children}</ClientProvider>
+          </SiteChrome>
         </ThemeProvider>
       </body>
     </html>

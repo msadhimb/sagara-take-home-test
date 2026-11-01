@@ -16,5 +16,18 @@ export const passwordRules = [
   },
 ] as const
 
+export const passwordResetRules = [
+  ...passwordRules,
+  {
+    id: "match",
+    label: "Passwords must match",
+    test: (value: string, context: any) =>
+      value.length > 0 && value === context.confirm_password,
+  },
+] as const
+
 export const isPasswordValid = (value: string) =>
   passwordRules.every((rule) => rule.test(value))
+
+export const isPasswordResetValid = (value: string, context: any) =>
+  passwordResetRules.every((rule) => rule.test(value, context))

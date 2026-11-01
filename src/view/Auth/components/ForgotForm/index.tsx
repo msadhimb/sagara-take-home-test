@@ -21,10 +21,7 @@ const ForgotForm = () => {
   } = useFormContext()
 
   const handleForgot = async (values: any) => {
-    // await simulateRequest()
-    // login({ email: values.email })
     setStep("otp-forgot")
-    // router.push("/")
   }
 
   return (
@@ -83,14 +80,12 @@ const ForgotForm = () => {
             </motion.div>
           </>
         ) : step === "otp-forgot" ? (
-          <>
-            <OtpVerify
-              email={watch("email")}
-              onVerified={() => {
-                setStep("reset")
-              }}
-            />
-          </>
+          <OtpVerify
+            email={watch("email")}
+            onVerified={() => {
+              handleSubmit(() => setStep("reset"))()
+            }}
+          />
         ) : (
           <ResetPassword />
         )}

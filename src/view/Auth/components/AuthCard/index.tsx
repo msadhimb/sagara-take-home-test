@@ -12,6 +12,7 @@ import ForgotForm from "../ForgotForm"
 import { loginSchema } from "../LoginForm/validation"
 import { registerSchema } from "../RegisterForm/validation"
 import { forgotSchema } from "../ForgotForm/validation"
+import type { AnyObjectSchema } from "yup"
 import {
   authTransition,
   formVariants,
@@ -19,15 +20,14 @@ import {
 } from "../../helper/animation"
 import { parseMode } from "./helper/parseMode"
 import { useAuthStore } from "../../store"
+import { authDefaults } from "../../form"
 
 type AuthMode = "login" | "register" | "forgot"
 
-export interface AuthFormValues {
-  name: string
-  email: string
-  companyId: string
-  password: string
-  remember: boolean
+const schemas: Record<AuthMode, AnyObjectSchema> = {
+  login: loginSchema,
+  register: registerSchema,
+  forgot: forgotSchema,
 }
 
 const AuthCard = () => {
@@ -36,30 +36,23 @@ const AuthCard = () => {
 
   const cardRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const modeRef = useRef<AuthMode>("login")
   const pendingModeRef = useRef<AuthMode | null>(null)
-  const isNavigatingRef = useRef(false)
   const { step } = useAuthStore()
 
   const [mode, setMode] = useState<AuthMode>(urlMode)
   const [direction, setDirection] = useState(1)
   const [contentHeight, setContentHeight] = useState<number | "auto">("auto")
 
-  const authDefaults: AuthFormValues = {
-    name: "",
-    email: "",
-    companyId: "",
-    password: "",
-    remember: true,
-  }
-
-  const form = useForm<AuthFormValues>({
-    resolver: ((values, context, options) =>
-      yupResolver(schemas[modeRef.current])(
-        values,
+  const form = useForm({
+    resolver: (values, context, options) =>
+      yupResolver(schemas[mode])(
+        {
+          ...values,
+          step: step,
+        } as any,
         context,
         options as any
-      )) as Resolver<AuthFormValues>,
+      ),
     mode: "onChange",
     defaultValues: authDefaults,
   })
@@ -67,12 +60,6 @@ const AuthCard = () => {
   const { watch } = form
 
   const isRegisterVerifying = mode === "register" && step !== "initial"
-
-  const schemas = {
-    login: loginSchema,
-    register: registerSchema,
-    forgot: forgotSchema,
-  }
 
   const getTitle = (mode: AuthMode) => {
     if (mode === "forgot") {
@@ -128,7 +115,6 @@ const AuthCard = () => {
   const prepareMode = (to: AuthMode) => {
     const email = form.getValues("email")
 
-    modeRef.current = to
     form.reset({ ...authDefaults, email })
   }
 
@@ -184,17 +170,6 @@ const AuthCard = () => {
   }
 
   useEffect(() => {
-    modeRef.current = mode
-  }, [mode])
-
-  useEffect(() => {
-    if (isNavigatingRef.current) {
-      if (urlMode === modeRef.current) isNavigatingRef.current = false
-      return
-    }
-
-    if (urlMode === modeRef.current) return
-
     prepareMode(urlMode)
     setDirection(urlMode === "login" ? -1 : 1)
     pendingModeRef.current = urlMode

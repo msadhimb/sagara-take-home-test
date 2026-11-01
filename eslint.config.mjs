@@ -18,6 +18,7 @@ const eslintConfig = defineConfig([
       "react-hooks/purity": "off",
       "react-hooks/set-state-in-effect": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "react-hooks/refs": "off",
     },
   },
 ])
