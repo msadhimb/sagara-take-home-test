@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { AnimatePresence, motion, stagger } from "motion/react"
@@ -12,10 +12,11 @@ import { formVariants } from "../../helper/animation"
 import PasswordChecklist from "./components/PasswordChecklist"
 import OtpVerify from "../OtpVerify"
 import { useAuthStore } from "../../store"
+import { useActionModal } from "@/components/ActionModal/store"
 
 const RegisterForm = () => {
-  const router = useRouter()
   const { step, setStep } = useAuthStore()
+  const { openModalActions } = useActionModal()
 
   const {
     handleSubmit,
@@ -26,20 +27,31 @@ const RegisterForm = () => {
 
   const [email, setEmail] = useState("")
 
-  const updateStep = (next: string) => {
-    setStep(next)
-  }
-
   const handleRegister = async (values: any) => {
-    updateStep("sending")
+    setStep("sending")
     await simulateRequest()
     setEmail(values.email)
-    updateStep("verify")
+    setStep("otp_register")
   }
 
   const handleVerified = () => {
-    router.replace("/auth?mode=login")
+    openModalActions({
+      success: true,
+      descText: "Your account has been created successfully",
+      closeButton: true,
+      link: {
+        text: "Go to Login",
+        direct: "/auth?mode=login",
+        replace: true,
+      },
+    })
   }
+
+  useEffect(() => {
+    return () => {
+      setStep("initial")
+    }
+  }, [])
 
   return (
     <div className="flex w-full flex-col items-center">
@@ -95,15 +107,15 @@ const RegisterForm = () => {
                 <motion.div {...stagger(2)}>
                   <Controller
                     control={control}
-                    name="companyId"
+                    name="phone_number"
                     render={({ field }) => (
                       <FormInput
                         {...field}
-                        label="Company ID"
-                        placeholder="e.g. SG-10294"
-                        autoComplete="organization"
+                        label="Phone Number"
+                        placeholder="08**********"
+                        autoComplete="tel"
                         icon={<Building2 size={15} />}
-                        error={errors?.companyId?.message as string}
+                        error={errors?.phone_number?.message as string}
                       />
                     )}
                   />
@@ -141,7 +153,9 @@ const RegisterForm = () => {
                 </Button>
               </motion.div>
             </>
-          ) : step === "sending" ? (
+          ) : step === "otp_register" ? (
+            <OtpVerify email={email} onVerified={handleVerified} />
+          ) : (
             <div className="flex flex-col items-center justify-center text-center">
               <div className="relative grid size-14 place-items-center">
                 <span
@@ -162,8 +176,6 @@ const RegisterForm = () => {
                 </p>
               </div>
             </div>
-          ) : (
-            <OtpVerify email={email} onVerified={handleVerified} />
           )}
         </motion.div>
       </AnimatePresence>

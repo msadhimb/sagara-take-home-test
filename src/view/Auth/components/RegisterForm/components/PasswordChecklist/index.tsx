@@ -1,6 +1,6 @@
 import { Check, CheckCircle, X, XCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { passwordResetRules, passwordRules } from "../../validation/password"
+import { passwordResetRules, passwordRules } from "../../../../helper/password"
 
 interface PasswordChecklistProps {
   password: string

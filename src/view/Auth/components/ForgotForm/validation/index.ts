@@ -1,5 +1,5 @@
 import * as yup from "yup"
-import { passwordResetRules } from "../../RegisterForm/validation/password"
+import { passwordResetRules } from "../../../helper/password"
 
 export const forgotSchema = yup.object({
   email: yup.string().when("step", {

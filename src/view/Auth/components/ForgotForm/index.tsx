@@ -10,6 +10,7 @@ import { formVariants } from "../../helper/animation"
 import { useAuthStore } from "../../store"
 import OtpVerify from "../OtpVerify"
 import ResetPassword from "./components/ResetPassword"
+import { useEffect } from "react"
 
 const ForgotForm = () => {
   const { step, setStep } = useAuthStore()
@@ -23,6 +24,12 @@ const ForgotForm = () => {
   const handleForgot = async (values: any) => {
     setStep("otp-forgot")
   }
+
+  useEffect(() => {
+    return () => {
+      setStep("initial")
+    }
+  }, [])
 
   return (
     <AnimatePresence mode="wait" initial={false}>

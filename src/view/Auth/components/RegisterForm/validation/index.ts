@@ -1,5 +1,5 @@
 import * as yup from "yup"
-import { isPasswordValid } from "./password"
+import { isPasswordValid } from "../../../helper/password"
 
 export const registerSchema = yup.object({
   name: yup.string().trim().required("Name is required"),
@@ -8,7 +8,7 @@ export const registerSchema = yup.object({
     .trim()
     .required("Email is required")
     .email("Enter a valid email address"),
-  companyId: yup.string().trim().required("Company ID is required"),
+  phone_number: yup.string().trim().required("Phone Number is required"),
   password: yup
     .string()
     .required("Password is required")
